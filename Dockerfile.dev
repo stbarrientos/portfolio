@@ -11,8 +11,17 @@ ENV RAILS_ENV="development"
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client \
-    build-essential git libpq-dev pkg-config && \
+    apt-get install --no-install-recommends -y \
+    curl \
+    libjemalloc2 \
+    libvips \
+    postgresql-client \
+    build-essential \
+    git \
+    libpq-dev \
+    nodejs \
+    npm \
+    pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install application gems
@@ -21,9 +30,14 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
     bundle exec bootsnap precompile --gemfile
 
+# Install javascript packages
+RUN npm install -g yarn 
+
+COPY package*.json ./
+RUN yarn install
+
 ARG DEFAULT_PORT 3000
 
 EXPOSE ${DEFAULT_PORT}
 
-ENTRYPOINT [ "bundle", "exec" ]
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
