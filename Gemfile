@@ -34,7 +34,7 @@ gem "bootsnap", require: false
 
 # React
 gem "react-rails", "~> 3.2"
-gem "shakapacker", "~> 7.0"
+gem "shakapacker", "~> 8.0"
 
 # Sidekiq
 gem "sidekiq", "~> 7.1"
